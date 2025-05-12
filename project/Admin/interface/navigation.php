@@ -13,8 +13,8 @@
 
     .navigation ul li a .title {
         /* color: #FFFFFF; */
-        font-size: 18px;
-        font-family: 'Roboto';
+        font-size: 18px !important;
+        font-family: 'Roboto', sans-serif;
         position: relative;
         display: block;
         padding: 0 10px;

@@ -2,15 +2,31 @@
 session_start();
 include('../../html/db/connect.php');
 
-$username = $_SESSION['username'];
-$result = $con->query("SELECT role FROM user WHERE username = '$username'")->fetch_array();
+// Lấy username từ session
+$username = $_SESSION['username'] ?? null;
 
-// Cho phép cả admin và nhân viên
-if (!$result || !in_array($result['role'], ['admin', 'nhanvien'])) {
+if (!$username) {
     header('Location: ../html/index.php?quanly=taikhoan');
     exit();
 }
+
+// Truy vấn role từ database
+$result = $con->query("SELECT role FROM user WHERE username = '$username'");
+$user = $result->fetch_array();
+
+if (!$user || !in_array($user['role'], ['admin', 'nhanvien'])) {
+    header('Location: ../html/index.php?quanly=taikhoan');
+    exit();
+}
+
+// Gán role vào session
+$_SESSION['role'] = $user['role'];
+
+// var_dump($username);
+// var_dump($user);
+// var_dump($_SESSION['role']);
 ?>
+
 
 <?php
 $sql_user = mysqli_query($con, "SELECT user.* FROM user");
@@ -117,16 +133,19 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     .input_product input {
         font-family: 'Roboto', sans-serif;
         width: 240px;
-        border-radius: 2;
+        border-radius: 2px;
         outline: none;
         height: 45px;
         font-size: 15px;
         padding: 10px;
-        border: 1px solid #e7e7e7;
+        border: 2px solid #3498db;
         border-radius: 2px;
     }
 
     .category_product select {
+        font-weight: 600;
+        color: oklch(62.3% 0.214 259.815);
+        background: oklch(97.7% 0.013 236.62);
         font-family: 'Roboto', sans-serif;
         width: 240px;
         outline: none;
@@ -134,20 +153,21 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         height: 45px;
         font-size: 15px;
         padding: 10px;
-        border: 1px solid #e7e7e7;
+        border: 2px solid #3498db;
         border-radius: 2px;
     }
 
-    .button_search button {
+    .button_return {
+        width: 120px;
         font-weight: 600;
-        border-radius: 2px;
+        border-radius: 20px;
         border: none;
         font-family: 'Noto Sans';
         font-size: 15px;
         text-align: center;
-        background: oklch(63.7% 0.237 25.331);
+        background: linear-gradient(46.26deg, oklch(62.3% 0.214 259.815), #009edb 96.59%) !important;
         color: #fff;
-        padding: 10px 7px;
+        padding: 10px 0px;
         text-decoration: none;
         transition: background 0.3s ease-in-out;
     }
@@ -186,28 +206,23 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .content .recent-payments table tr th:nth-child(3) {
-        text-align: left;
-        padding-left: 20px;
+        text-align: center;
     }
 
     .content .recent-payments table tr th:nth-child(4) {
-        text-align: left;
-        padding-left: 20px;
+        text-align: center;
     }
 
     .content .recent-payments table tr th:nth-child(5) {
-        text-align: left;
-        padding-left: 20px;
+        text-align: center;
     }
 
     .content .recent-payments table tr th:nth-child(6) {
-        text-align: left;
-        padding-left: 20px;
+        text-align: center;
     }
 
     .content .recent-payments table tr th:nth-child(7) {
-        text-align: left;
-        padding-left: 20px;
+        text-align: center;
     }
 
     .content .recent-payments table tr th:nth-child(8) {
@@ -340,10 +355,10 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     img.profile-1 {
-        margin-bottom: 10px;
-        margin-top: 10px;
-        width: 120px !important;
-        height: 160px !important;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        width: 100px !important;
+        height: 130px !important;
         padding: 5px 5px !important;
         align-items: center;
         justify-content: center;
@@ -365,30 +380,36 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     td button:nth-child(1) {
+        height: 35px;
+        width: 35px;
         outline: none;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        padding: 12px !important;
+        padding: unset !important;
         color: #ffffff;
         background-color: oklch(76.8% 0.233 130.85);
     }
 
     td button:nth-child(2) {
+        height: 35px;
+        width: 35px;
         outline: none;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        padding: 12px !important;
+        padding: unset !important;
         color: #ffffff;
     }
 
     td button:nth-child(3) {
+        height: 35px;
+        width: 35px;
         outline: none;
         border: none;
         border-radius: 6px;
         cursor: pointer;
-        padding: 12px !important;
+        padding: unset !important;
         color: #ffffff;
         background-color: oklch(63.7% 0.237 25.331);
     }
@@ -665,35 +686,138 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         /* màu nền tô đậm */
         font-weight: bold;
     }
+
+    .title_order {
+        color: oklch(68.5% 0.169 237.323);
+        font-family: "Noto Sans", sans-serif;
+        font-size: 33px;
+    }
+
+    .dash {
+        border: none;
+        border-radius: 45px;
+        padding-bottom: 4px;
+        font-weight: bold;
+        /* height: 0px; */
+        background-color: oklch(68.5% 0.169 237.323);
+        margin-top: 10px;
+        width: 114px;
+        margin-left: 5px;
+    }
+
+    .manage_order {
+        display: grid;
+        padding: 60px 20px 0px 20px;
+        background: oklch(97% 0 0);
+    }
+
+    .button_search_1 {
+        width: 120px !important;
+        font-weight: 600 !important;
+        border-radius: 20px !important;
+        border: none !important;
+        font-family: 'Noto Sans' !important;
+        font-size: 15px !important;
+        text-align: center !important;
+        background: linear-gradient(46.26deg, oklch(62.3% 0.214 259.815), #009edb 96.59%) !important;
+        color: #fff !important;
+        padding: 10px 0px !important;
+        text-decoration: none !important;
+        transition: background 0.3s ease-in-out !important;
+    }
+
+    .button_add_1 {
+        display: unset !important;
+        width: 120px !important;
+        font-weight: 600 !important;
+        border-radius: 20px !important;
+        border: none !important;
+        font-family: 'Noto Sans' !important;
+        font-size: 15px !important;
+        text-align: center !important;
+        background: linear-gradient(46.26deg, oklch(62.3% 0.214 259.815), #009edb 96.59%) !important;
+        color: #fff !important;
+        padding: 10px 0px !important;
+        text-decoration: none !important;
+        transition: background 0.3s ease-in-out !important;
+    }
+
+    .handle_product {
+        display: flex;
+        gap: 25px;
+    }
+
+    .category_product select option {
+        font-weight: 500;
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+    }
 </style>
 
 <?php
 include('../../html/db/connect.php');
 
-$sql_sanpham = mysqli_query($con, "SELECT sanpham.*, loaisanpham.ten_loai_sach, tacgia.ten_tac_gia, giatien.gia_khuyen_mai, giatien.gia, giatien.id_khoanggia, khoanggia.ten_khoang_gia, nhaxuatban.ten_nha_xuat_ban FROM sanpham
+// Lấy thể loại từ URL nếu có
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+$selected_category = isset($_GET['category']) ? $_GET['category'] : '';
+$selected_author = isset($_GET['author']) ? $_GET['author'] : '';
+$selected_publishing = isset($_GET['publishing']) ? $_GET['publishing'] : '';
+
+
+// Truy vấn sản phẩm có lọc theo thể loại nếu người dùng chọn
+$sql_query = "SELECT sanpham.*, loaisanpham.ten_loai_sach, tacgia.ten_tac_gia, giatien.gia_khuyen_mai, giatien.gia, giatien.id_khoanggia, khoanggia.ten_khoang_gia, nhaxuatban.ten_nha_xuat_ban 
+FROM sanpham
 INNER JOIN giatien ON sanpham.id_sanpham = giatien.id_sanpham
 INNER JOIN khoanggia ON giatien.id_khoanggia = khoanggia.id_khoanggia
 INNER JOIN loaisanpham ON loaisanpham.id_loai_spham = sanpham.id_loai_spham
 INNER JOIN tacgia ON tacgia.id_tacgia = sanpham.id_tacgia
-INNER JOIN nhaxuatban ON nhaxuatban.id_nhaxuatban = sanpham.id_nhaxuatban
-ORDER BY sanpham.id_sanpham ASC");
+INNER JOIN nhaxuatban ON nhaxuatban.id_nhaxuatban = sanpham.id_nhaxuatban";
+
+if (!empty($selected_category)) {
+    $selected_category = mysqli_real_escape_string($con, $selected_category);
+    $conditions[] = "loaisanpham.ten_loai_sach = '$selected_category'";
+}
+
+if (!empty($selected_author)) {
+    $selected_author = mysqli_real_escape_string($con, $selected_author);
+    $conditions[] = "tacgia.ten_tac_gia = '$selected_author'";
+}
+
+if (!empty($selected_publishing)) {
+    $selected_publishing = mysqli_real_escape_string($con, $selected_publishing);
+    $conditions[] = "nhaxuatban.ten_nha_xuat_ban = '$selected_publishing'";
+}
+
+// Lọc theo keyword (mã hóa đơn hoặc họ tên)
+if (!empty($keyword)) {
+    // escape và thêm dấu % để LIKE
+    $kw = mysqli_real_escape_string($con, $keyword);
+    $conditions[] = "sanpham.ten_sach LIKE '%$kw%' ";
+}
+
+// Thêm điều kiện nếu có
+if (!empty($conditions)) {
+    $sql_query .= " WHERE " . implode(" AND ", $conditions);
+}
+
+// Sắp xếp
+$sql_query .= " ORDER BY sanpham.id_sanpham ASC";
+
+// Thực thi
+$sql_sanpham = mysqli_query($con, $sql_query);
+
 ?>
 
 <?php
-// Kết nối DB
 include('../../html/db/connect.php');
 
-// Lấy danh sách tác giả
 $list_tacgia = mysqli_query($con, "SELECT * FROM tacgia");
 
-// Lấy danh sách nhà xuất bản
 $list_nxb = mysqli_query($con, "SELECT * FROM nhaxuatban");
 
-// Lấy danh sách thể loại
 $list_theloai = mysqli_query($con, "SELECT * FROM loaisanpham");
 
 $list_khoanggia = mysqli_query($con, "SELECT * FROM khoanggia");
-
 ?>
 
 <body>
@@ -708,15 +832,19 @@ $list_khoanggia = mysqli_query($con, "SELECT * FROM khoanggia");
             include("../../Admin/interface/topbar.php")
             ?>
 
-            <?php if (isset($_GET['status'])): ?>
-                <?php if ($_GET['status'] === 'success'): ?>
-                    <div class="alert_update">
-                        <div class="alert alert-success">✅ Cập nhật sản phẩm thành công.</div>
-                    </div>
-                <?php elseif ($_GET['status'] === 'error'): ?>
-                    <div class="alert alert-danger">❌ Có lỗi xảy ra trong quá trình cập nhật.</div>
+            <div class="manage_order">
+                <?php if (isset($_GET['status'])): ?>
+                    <?php if ($_GET['status'] === 'success'): ?>
+                        <div class="alert_update">
+                            <div class="alert alert-success">✅ Cập nhật sản phẩm thành công.</div>
+                        </div>
+                    <?php elseif ($_GET['status'] === 'error'): ?>
+                        <div class="alert alert-danger">❌ Có lỗi xảy ra trong quá trình cập nhật.</div>
+                    <?php endif; ?>
                 <?php endif; ?>
-            <?php endif; ?>
+                <h1 class="title_order">Quản lí sản phẩm</h1>
+                <hr class="dash">
+            </div>
 
             <div class="form_product">
                 <div class="form_search">
@@ -724,22 +852,60 @@ $list_khoanggia = mysqli_query($con, "SELECT * FROM khoanggia");
                         <div class="title_form">
                             <h1>Form tìm kiếm</h1>
                         </div>
-                        <div class="search_product">
-                            <div class="input_product">
-                                <input class="input_export" value placeholder="Tên sản phẩm">
+                        <form method="GET" action="" class="handle_product">
+                            <div class="search_product">
+                                <div class="input_product">
+                                    <input class="input_export" name="keyword" value="<?php echo htmlspecialchars($keyword); ?>" placeholder="Tên sản phẩm...">
+                                </div>
+                                <div class="category_product">
+                                    <select name="category" onchange="this.form.submit()">
+                                        <option value="">-- Thể loại sản phẩm --</option>
+                                        <?php
+                                        $sql_category = mysqli_query($con, "SELECT DISTINCT ten_loai_sach FROM loaisanpham");
+                                        while ($row = mysqli_fetch_assoc($sql_category)) {
+                                            $category = $row['ten_loai_sach'];
+                                            $selected = (isset($_GET['category']) && $_GET['category'] == $category) ? 'selected' : '';
+                                            echo "<option value=\"$category\" $selected>$category</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="category_product">
+                                    <select name="author" onchange="this.form.submit()">
+                                        <option value="">-- Tác giả --</option>
+                                        <?php
+                                        $sql_author = mysqli_query($con, "SELECT DISTINCT ten_tac_gia FROM tacgia");
+                                        while ($row = mysqli_fetch_assoc($sql_author)) {
+                                            $author = $row['ten_tac_gia'];
+                                            $selected = (isset($_GET['author']) && $_GET['author'] == $author) ? 'selected' : '';
+                                            echo "<option value=\"$author\" $selected>$author</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="category_product">
+                                    <select name="publishing" onchange="this.form.submit()">
+                                        <option value="">-- Nhà xuất bản --</option>
+                                        <?php
+                                        $sql_publishing = mysqli_query($con, "SELECT DISTINCT ten_nha_xuat_ban FROM nhaxuatban");
+                                        while ($row = mysqli_fetch_assoc($sql_publishing)) {
+                                            $publishing = $row['ten_nha_xuat_ban'];
+                                            $selected = (isset($_GET['publishing']) && $_GET['publishing'] == $publishing) ? 'selected' : '';
+                                            echo "<option value=\"$publishing\" $selected>$publishing</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="button_reset">
+                                    <a href="../../Admin/interface/sanpham.php" style="text-decoration: none;">
+                                        <button type="button" class="button_return">
+                                            <i class="fa-solid fa-rotate-left"></i>
+                                            <span>Trở về</span>
+                                        </button>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="category_product">
-                                <select>
-                                    <option>Phân loại sản phẩm</option>
-                                </select>
-                            </div>
-                            <div class="button_search">
-                                <button>
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                    <span>Tìm kiếm</span>
-                                </button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -747,7 +913,7 @@ $list_khoanggia = mysqli_query($con, "SELECT * FROM khoanggia");
             <div class="form_add">
                 <div class="form_add_1">
                     <div class="button_add">
-                        <button>
+                        <button class="button_add_1">
                             <i class="fa-solid fa-plus"></i>
                             <span>Tạo mới</span>
                         </button>
@@ -1264,6 +1430,13 @@ $list_khoanggia = mysqli_query($con, "SELECT * FROM khoanggia");
 
                     tableRows.forEach(row => {
                         row.addEventListener('click', function(e) {
+                            // Nếu click là trên nút thì không làm gì
+                            if (
+                                e.target.closest('.toggle-status-btn') ||
+                                e.target.closest('.btn-delete') ||
+                                e.target.closest('button') // để bắt tất cả các nút nếu cần
+                            ) return;
+
                             // Bỏ highlight nếu có dòng khác đang được chọn
                             if (currentlyHighlighted && currentlyHighlighted !== row) {
                                 currentlyHighlighted.classList.remove('highlighted-row');
@@ -1277,15 +1450,12 @@ $list_khoanggia = mysqli_query($con, "SELECT * FROM khoanggia");
                                 row.classList.add('highlighted-row');
                                 currentlyHighlighted = row;
                             }
-
-                            // Ngăn không cho sự kiện lan ra ngoài
-                            e.stopPropagation();
                         });
                     });
 
                     // Nếu click ra ngoài bảng thì bỏ chọn
-                    document.addEventListener('click', function() {
-                        if (currentlyHighlighted) {
+                    document.addEventListener('click', function(e) {
+                        if (!e.target.closest('table') && currentlyHighlighted) {
                             currentlyHighlighted.classList.remove('highlighted-row');
                             currentlyHighlighted = null;
                         }

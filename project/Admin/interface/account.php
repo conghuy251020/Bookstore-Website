@@ -82,7 +82,7 @@ $sql_user = mysqli_query($con, $sql_query);
     .table_section thead th {
         border: 2px solid #3498db;
         position: sticky;
-        top: 0;
+        top: -1px;
         background: oklch(70.7% 0.165 254.624) !important;
         z-index: 1;
     }
@@ -826,6 +826,9 @@ $sql_user = mysqli_query($con, $sql_query);
     }
 
     .search_status {
+        font-weight: 600;
+        color: oklch(62.3% 0.214 259.815);
+        background: oklch(97.7% 0.013 236.62);
         font-family: 'Roboto', sans-serif;
         width: 240px;
         outline: none;
@@ -949,6 +952,18 @@ $sql_user = mysqli_query($con, $sql_query);
     }
 
     .button_return span {
+        font-weight: 500;
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .classify_status select option {
+        font-weight: 500;
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .select_role option {
         font-weight: 500;
         font-size: 16px;
         font-family: 'Roboto', sans-serif;

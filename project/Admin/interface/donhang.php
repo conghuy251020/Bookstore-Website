@@ -156,6 +156,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .classify_status select {
+        cursor: pointer;
         font-family: 'Roboto', sans-serif;
         width: 240px;
         outline: none;
@@ -168,6 +169,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .button_search button {
+        cursor: pointer;
         width: 120px;
         font-weight: 600;
         border-radius: 20px;
@@ -182,7 +184,30 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         transition: background 0.3s ease-in-out;
     }
 
+    .button_statistical button {
+        cursor: pointer;
+        width: 240px;
+        font-weight: 600;
+        border-radius: 20px;
+        border: none;
+        font-family: 'Noto Sans';
+        font-size: 15px;
+        text-align: center;
+        background: linear-gradient(46.26deg, oklch(62.3% 0.214 259.815), #009edb 96.59%) !important;
+        color: #fff;
+        padding: 10px 0px;
+        text-decoration: none;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .button_statistical i {
+        margin-right: 3px;
+        font-size: 20px;
+    }
+
     .recent-payments {
+        max-height: 540px;
+        overflow-y: auto;
         position: relative;
         display: grid;
         min-height: unset !important;
@@ -190,6 +215,12 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         padding: unset !important;
         box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
         border-radius: unset !important;
+    }
+
+    .recent-payments table thead tr th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
 
     .content {
@@ -237,6 +268,12 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     .classify_receive select option {
         font-weight: 500;
         font-size: 15px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .classify_status select option {
+        font-weight: 500;
+        font-size: 16px;
         font-family: 'Roboto', sans-serif;
     }
 
@@ -643,9 +680,9 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
 
 
     .alert {
-        padding: 12px 200px;
+        padding: 12px 100px !important;
         border-radius: 5px;
-        margin: 15px 0;
+        margin: unset !important;
         width: fit-content;
     }
 
@@ -656,6 +693,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         background-color: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
+        transition: opacity 0.5s ease-in-out;
     }
 
     .alert-danger {
@@ -882,11 +920,21 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
 
     .button_search,
     .button_reset,
-    .button_history {
+    .button_history,
+    .button_statistical {
         display: inline-block;
     }
 
+    .button_search span,
+    .button_reset span,
+    .button_history span,
+    .button_statistical span {
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+    }
+
     .button_history_1 {
+        cursor: pointer;
         margin-right: 15px;
         width: 120px;
         font-weight: 600;
@@ -903,6 +951,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .input_date {
+        cursor: pointer;
         font-family: 'Roboto', sans-serif;
         width: 240px;
         outline: none;
@@ -959,6 +1008,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .button_return {
+        cursor: pointer;
         width: 120px;
         font-weight: 600;
         border-radius: 20px;
@@ -994,6 +1044,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .search_kieu_giao {
+        cursor: pointer;
         font-weight: 600;
         color: oklch(62.3% 0.214 259.815);
         background: oklch(97.7% 0.013 236.62);
@@ -1009,6 +1060,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .search_nhan_hang {
+        cursor: pointer;
         font-weight: 600;
         color: oklch(62.3% 0.214 259.815);
         background: oklch(97.7% 0.013 236.62);
@@ -1137,20 +1189,13 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         background-color: #218838;
     }
 
-    .alert {
-        padding: 12px 200px;
-        border-radius: 5px;
-        margin: 15px 0;
-        width: fit-content;
-    }
-
     .success-alert {
         font-weight: 500;
         font-family: 'Roboto';
         font-size: 17px;
         background-color: #d4edda;
         color: #155724;
-        border: 1px solid #c3e6cb;
+        border: 2px solid green;
     }
 
     .alert-danger {
@@ -1180,6 +1225,7 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
     }
 
     .history_bill th {
+        border: 2px solid blue;
         padding: 10px 20px;
         font-family: 'Roboto', sans-serif;
         font-size: 16px;
@@ -1268,6 +1314,73 @@ $sql_user = mysqli_query($con, "SELECT user.* FROM user");
         color: #FFFFFF;
         background-color: red;
     }
+
+    .box_success {
+        justify-content: center;
+        display: flex;
+    }
+
+    .table_history {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .table_history table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table_history thead th {
+        position: sticky;
+        top: 0;
+        /* màu nền cho hàng tiêu đề */
+        z-index: 2;
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 800px;
+        position: relative;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .close-btn {
+        position: absolute;
+        right: 16px;
+        top: 10px;
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
 </style>
 
 <?php
@@ -1297,10 +1410,10 @@ if (!empty($status_filter)) {
 
 // Lọc theo khoảng thời gian giao hàng
 if (!empty($from_date)) {
-    $sql_query .= " AND hoadon.ngay_giao_hang >= '$from_date'";
+    $sql_query .= " AND hoadon.ngay_tao >= '$from_date 00:00:00'";
 }
 if (!empty($to_date)) {
-    $sql_query .= " AND hoadon.ngay_giao_hang <= '$to_date'";
+    $sql_query .= " AND hoadon.ngay_tao <= '$to_date 23:59:59'";
 }
 
 if (!empty($tinh_thanh)) {
@@ -1338,11 +1451,44 @@ if (!empty($keyword)) {
     )";
 }
 
-
-$sql_query .= " ORDER BY hoadon.id_hoadon ASC";
+$sql_query .= " ORDER BY hoadon.id_hoadon DESC";
 
 $sql_hoadon = mysqli_query($con, $sql_query);
 
+?>
+
+<?php
+// Kết nối CSDL
+include('../../html/db/connect.php');
+
+$top_customers = [];
+
+if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
+    $from_date = $_GET['from_date'];
+    $to_date = $_GET['to_date'];
+
+    if (!empty($from_date) && !empty($to_date)) {
+        $query_top = "
+            SELECT 
+                ho_va_ten, email, so_dien_thoai, SUM(tong_tien) AS tong_mua
+            FROM 
+                hoadon
+            WHERE 
+                ngay_tao BETWEEN '$from_date' AND '$to_date'
+            GROUP BY 
+                email
+            ORDER BY 
+                tong_mua DESC
+            LIMIT 5
+        ";
+
+        $result_top = mysqli_query($con, $query_top);
+
+        while ($row = mysqli_fetch_assoc($result_top)) {
+            $top_customers[] = $row;
+        }
+    }
+}
 ?>
 
 <body>
@@ -1357,21 +1503,22 @@ $sql_hoadon = mysqli_query($con, $sql_query);
             include("../../Admin/interface/topbar.php")
             ?>
 
-            <?php if (isset($_SESSION['success_add'])): ?>
-                <div class="alert success-alert">
-                    <?= $_SESSION['success_add']; ?>
-                </div>
-                <?php unset($_SESSION['success_add']); ?>
-            <?php endif; ?>
-
-            <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert error-alert">
-                    <?= $_SESSION['error']; ?>
-                </div>
-                <?php unset($_SESSION['error']); ?>
-            <?php endif; ?>
-
             <div class="manage_order">
+                <?php if (isset($_SESSION['success_add'])): ?>
+                    <div class="box_success">
+                        <div class="alert success-alert" id="success-alert">
+                            <?= $_SESSION['success_add']; ?>
+                        </div>
+                    </div>
+                    <?php unset($_SESSION['success_add']); ?>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert-error" id="error-alert">
+                        <?= $_SESSION['error']; ?>
+                    </div>
+                    <?php unset($_SESSION['error']); ?>
+                <?php endif; ?>
                 <h1 class="title_order">Quản lí đơn hàng</h1>
                 <hr class="dash">
             </div>
@@ -1450,6 +1597,12 @@ $sql_hoadon = mysqli_query($con, $sql_query);
                                 <option value="Giao hàng tận nơi" <?php if ($phuongthucnhan_filter == 'Giao hàng tận nơi') echo 'selected'; ?>>Giao hàng tận nơi</option>
                                 <option value="Nhận tại cửa hàng" <?php if ($phuongthucnhan_filter == 'Nhận tại cửa hàng') echo 'selected'; ?>>Nhận tại cửa hàng</option>
                             </select>
+                        </div>
+                        <div class="button_statistical">
+                            <button>
+                                <i class="fa-solid fa-chart-simple"></i>
+                                <span>Thống kê top khách hàng</span>
+                            </button>
                         </div>
                         <div class="button_search">
                             <button type="submit">
@@ -1576,20 +1729,25 @@ $sql_hoadon = mysqli_query($con, $sql_query);
                         <span class="close-btn" onclick="closeHistoryModal()">&times;</span>
                         <h3>Danh sách các hóa đơn đã xóa</h3>
                     </div>
-                    <table border="1" cellpadding="10" cellspacing="0">
-                        <tr class="history_bill">
-                            <th>Mã hóa đơn</th>
-                            <th>Khách hàng</th>
-                            <th>Tổng tiền</th>
-                            <th>Ngày tạo</th>
-                            <th>Ngày xóa</th>
-                            <th>Hành động</th>
-                        </tr>
-                        <?php
-                        $result_deleted = mysqli_query($con, "SELECT *, khachhang.ho_ten FROM hoadon_daxoa
+                    <div class="table_history">
+                        <div class="table_delete">
+                            <table border="1" cellpadding="10" cellspacing="0">
+                                <thead>
+                                    <tr class="history_bill">
+                                        <th>Mã hóa đơn</th>
+                                        <th>Khách hàng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Ngày xóa</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $result_deleted = mysqli_query($con, "SELECT *, khachhang.ho_ten FROM hoadon_daxoa
                     INNER JOIN khachhang ON khachhang.id_khachhang = hoadon_daxoa.id_khachhang");
-                        while ($row = mysqli_fetch_assoc($result_deleted)) {
-                            echo '<tr class="infor_history">
+                                    while ($row = mysqli_fetch_assoc($result_deleted)) {
+                                        echo '<tr class="infor_history">
                         <td>' . $row['ma_hoadon'] . '</td>
                         <td>' . $row['ho_ten'] . '</td>
                         <td>' . number_format($row['tong_tien'], 0, ',', '.') . 'đ</td>
@@ -1604,9 +1762,12 @@ $sql_hoadon = mysqli_query($con, $sql_query);
                            </button>
                         </td>
                       </tr>';
-                        }
-                        ?>
-                    </table>
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1628,8 +1789,74 @@ $sql_hoadon = mysqli_query($con, $sql_query);
                 </div>
             </div>
 
+            <!-- Modal overlay đen mờ -->
+            <div id="customerModal" class="modal-overlay">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeModal()">&times;</span>
+                    <h2>Top 5 khách hàng mua hàng nhiều nhất</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ và Tên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Tổng tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
+                                $from = $_GET['from_date'];
+                                $to = $_GET['to_date'];
+                                $query_top = "
+                        SELECT ho_va_ten, email, so_dien_thoai, SUM(tong_tien) as tong_chi
+                        FROM hoadon
+                        WHERE ngay_tao BETWEEN '$from' AND '$to'
+                        GROUP BY email
+                        ORDER BY tong_chi DESC
+                        LIMIT 5
+                    ";
+                                $result_top = mysqli_query($con, $query_top);
+                                $stt = 1;
+                                while ($row = mysqli_fetch_assoc($result_top)) {
+                                    echo '<tr>';
+                                    echo '<td>' . $stt++ . '</td>';
+                                    echo '<td>' . htmlspecialchars($row['ho_va_ten']) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row['email']) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row['so_dien_thoai']) . '</td>';
+                                    echo '<td>' . number_format($row['tong_chi'], 0, ',', '.') . 'đ</td>';
+                                    echo '</tr>';
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
             <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+            <script>
+                // Tự ẩn thông báo thành công sau 3 giây
+                const successAlert = document.getElementById('success-alert');
+                if (successAlert) {
+                    setTimeout(() => {
+                        successAlert.style.opacity = '0';
+                        setTimeout(() => successAlert.style.display = 'none', 500); // chờ hiệu ứng opacity kết thúc
+                    }, 3000);
+                }
+
+                // (Tùy chọn) Nếu muốn tự ẩn cả lỗi
+                const errorAlert = document.getElementById('error-alert');
+                if (errorAlert) {
+                    setTimeout(() => {
+                        errorAlert.style.opacity = '0';
+                        setTimeout(() => errorAlert.style.display = 'none', 500);
+                    }, 3000);
+                }
+            </script>
 
             <script>
                 //Menu
@@ -1867,7 +2094,19 @@ $sql_hoadon = mysqli_query($con, $sql_query);
                 });
             </script>
 
+            <script>
+                // Kiểm tra nếu có dữ liệu GET thì mở modal
+                window.onload = function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('from_date') && urlParams.get('to_date')) {
+                        document.getElementById('customerModal').style.display = 'block';
+                    }
+                };
 
+                function closeModal() {
+                    document.getElementById('customerModal').style.display = 'none';
+                }
+            </script>
 </body>
 
 </html>
